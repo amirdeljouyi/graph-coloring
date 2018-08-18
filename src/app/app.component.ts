@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ElectronService } from './providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
@@ -8,7 +8,15 @@ import { AppConfig } from '../environments/environment';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  isCollapsed = false;
+  triggerTemplate = null;
+  width = 280;
+  @ViewChild('trigger') customTrigger: TemplateRef<void>;
+
+  changeTrigger(): void {
+    this.triggerTemplate = this.customTrigger;
+  }
   constructor(public electronService: ElectronService,
     private translate: TranslateService) {
 
@@ -22,5 +30,10 @@ export class AppComponent {
     } else {
       console.log('Mode web');
     }
+  }
+  ngAfterViewInit() {
+    document.querySelector('#content-container').addEventListener('contextmenu', () => {
+      this.electronService.ipcRenderer.send('show-context-menu');
+    });
   }
 }

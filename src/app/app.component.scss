@@ -1,0 +1,26 @@
+  .trigger,
+  .social {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+  }
+
+  :host ::ng-deep .trigger:hover,
+  :host ::ng-deep .social:hover {
+    color: #1890ff;
+  }
+
+  nz-sider {
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  nz-header {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+  }

@@ -1,0 +1,117 @@
+<div class="logo">
+  <img class="image" src="../favicon.png" height="100%">
+  <span class="title" *ngIf="!isCollapsed">Graph Coloring</span>
+</div>
+<ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-file"></i>
+      <span class="nav-text">File</span>
+    </span>
+    <ul>
+      <li (click)="importButton()" nz-menu-item>Import From File</li>
+      <li (click)="exportButton()" nz-menu-item>Export To File</li>
+    </ul>
+  </li>
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-pie-chart"></i>
+      <span class="nav-text">Graphs</span>
+    </span>
+    <ul>
+      <li (click)="loadPetersen()" nz-menu-item>Load Petersen Graph</li>
+      <li (click)="loadKonigsberg()" nz-menu-item>Load Königsberg Bridges Graph</li>
+      <li (click)="loadComplete()" nz-menu-item>Load Complete Graph</li>
+      <li (click)="loadHypercube()" nz-menu-item>Load Hypercube Graph</li>
+      <li (click)="loadCustom()" nz-menu-item>Make Custom Graph</li>
+    </ul>
+  </li>
+  <li nz-submenu nzOpen>
+    <span title>
+      <i class="anticon anticon-code"></i>
+      <span class="nav-text">Algorithms</span>
+    </span>
+    <ul>
+      <li (click)="welshPowell()" nz-menu-item>Welsh Powell</li>
+      <li nz-submenu>
+        <span title>Harmony Search</span>
+        <ul>
+          <li (click)="harmonySearch()" nz-menu-item>Vanilla</li>
+          <!-- <li nz-menu-item>IHS</li>
+          <li nz-menu-item>SAHS</li> -->
+        </ul>
+      </li>
+      <li (click)="genetic()" nz-menu-item>Genetic Algorithm</li>
+      <!-- <li nz-menu-item>Simulated Anneling</li>
+      <li nz-menu-item>Tabu Search</li> -->
+    </ul>
+  </li>
+  <li nz-menu-item>
+    <a routerLink="settings">
+      <i class="anticon anticon-setting"></i>
+      <span class="nav-text">Settings</span>
+    </a>
+  </li>
+</ul>
+<nz-drawer [nzClosable]="false" [nzWidth]="320" [nzVisible]="visible" nzTitle="{{titleDrawer}}" (nzOnClose)="close()">
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label>{{lableInputDrawer}}</nz-form-label>
+        <nz-form-control>
+          <nz-input-number [(ngModel)]="inputValue" [nzMin]="1" [nzMax]="maxValue"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div class="footer">
+    <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;">
+      <span>Cancel</span>
+    </button>
+    <button type="button" (click)="submit()" class="ant-btn ant-btn-primary">
+      <span>Submit</span>
+    </button>
+  </div>
+</nz-drawer>
+
+<nz-drawer [nzClosable]="false" [nzWidth]="320" [nzVisible]="uploadVisible" nzTitle="{{titleDrawer}}" (nzOnClose)="close()">
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <nz-upload nzType="drag" [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
+        <p class="ant-upload-drag-icon">
+          <i class="anticon anticon-inbox"></i>
+        </p>
+        <p class="ant-upload-text">Click or drag file to this area to import</p>
+        <p class="ant-upload-hint">Support JSON graph as gephi and DIMACS graphs with .col format</p>
+      </nz-upload>
+    </div>
+  </div>
+  <div class="footer">
+    <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;">
+      <span>Cancel</span>
+    </button>
+    <!-- <button type="button" (click)="import()" class="ant-btn ant-btn-primary">
+      <span>Import</span>
+    </button> -->
+  </div>
+</nz-drawer>
+
+<nz-drawer [nzClosable]="false" [nzWidth]="320" [nzVisible]="exportVisible" nzTitle="{{titleDrawer}}" (nzOnClose)="close()">
+  <div nz-row>
+    <div nz-col nzSpan="12">
+      <button type="button" (click)="export('json')" class="ant-btn ant-btn-primary">
+        <span>Export to JSON</span>
+      </button>
+    </div>
+    <div nz-col nzSpan="12">
+        <button type="button" (click)="export('dimacs')" class="ant-btn ant-btn-primary">
+          <span>Export to DIMACS</span>
+        </button>
+      </div>
+  </div>
+  <div class="footer">
+    <button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;">
+      <span>Cancel</span>
+    </button>
+  </div>
+</nz-drawer>

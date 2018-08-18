@@ -1,7 +1,227 @@
-/* You can add global styles to this file, and also import other style files */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
+  height: 100vh;
+}
 
-  height: 100%;
+.spacer {
+  flex: 1 1 auto;
+}
+
+.vis-button {
+  display: inline-block;
+  font-weight: 400;
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  padding: 0 15px;
+  font-size: 14px;
+  border-radius: 0;
+  height: 32px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: all .3s cubic-bezier(.645, .045, .355, 1);
+  position: relative;
+  position: relative;
+  line-height: 30px;
+  color: #fff;
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.vis-button:first-child:not(:last-child) {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.vis-button:last-child:not(:first-child) {
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.vis-button:last-child:not(:first-child) {
+  border-left-color: #40a9ff;
+}
+
+.vis-button:hover {
+  color: #fff;
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.vis-none {
+  cursor: text;
+  color: rgba(0, 0, 0, .65);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.vis-button:only-child {
+  border-radius: 4px;
+}
+
+.vis-delete {
+  .vis-label:before {
+    margin-right: 8px;
+    content: "\e69f";
+    display: inline-block;
+    font-family: anticon !important;
+  }
+  color: #f5222d;
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
+}
+
+.vis-delete:hover {
+  color: #fff;
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.vis-add {
+  .vis-label:before {
+    margin-right: 8px;
+    content: "\e625";
+    display: inline-block;
+    font-family: anticon !important;
+  }
+}
+
+.vis-edit {
+  .vis-label:before {
+    margin-right: 8px;
+    content: "\e692";
+    display: inline-block;
+    font-family: anticon !important;
+  }
+}
+
+.vis-connect {
+  .vis-label:before {
+    margin-right: 8px;
+    content: "\e613";
+    display: inline-block;
+    font-family: anticon !important;
+  }
+}
+
+.vis-back {
+  .vis-label:before {
+    margin-right: 8px;
+    content: "\e612";
+    display: inline-block;
+    font-family: anticon !important;
+  }
+}
+
+.vis-separator-line {
+  display: none;
+}
+
+.vis-close {
+  float: right;
+  width: 32px;
+  padding: 0;
+  font-size: 16px;
+  border-radius: 50%;
+  height: 32px;
+  line-height: 1.5;
+  font-weight: 400;
+  text-align: center;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: all .3s cubic-bezier(.645, .045, .355, 1);
+  position: relative;
+  color: rgba(0, 0, 0, .65);
+  background-color: #fff;
+  &:before {
+    // margin-right: 8px;
+    content: "\e633";
+    margin-top: 3px;
+    display: inline-block;
+    font-family: anticon !important;
+  }
+}
+
+.vis-close:focus,
+.vis-close:hover {
+  color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.vis-manipulation,
+.vis-edit-mode {
+  float: left;
+}
+
+.clearfix {
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+.ant-collapse>.ant-collapse-item {
+  border-bottom: none !important;
+}
+
+.ant-collapse>.ant-collapse-item:first-child {
+  border-bottom: 1px solid #40a9ff !important;
+}
+
+.ant-collapse>.ant-collapse-item:last-child>.ant-collapse-header {
+  border-radius: 0 !important;
+}
+
+.ant-collapse {
+  border-radius: 0 !important;
+  border: 0 !important;
+  .ant-collapse-header {
+    background-color: #1890ff;
+    color: #fff !important;
+  }
+}
+
+.ant-collapse-content {
+  border-top: none !important;
+}
+
+.ant-tabs-bar {
+  background-color: #1890ff;
+  color: rgba(255, 255, 255, 0.7) !important;
+  .ant-tabs-nav .ant-tabs-tab-active {
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+  }
+  .ant-tabs-nav .ant-tabs-tab:hover {
+    color: rgb(255, 255, 255);
+  }
+}
+
+.ant-tabs-tabpane {
+  padding: 50px;
+}
+
+.ant-upload.ant-upload-drag {
+  height: calc(100vh - 156px) !important;
+  padding: 16px !important;
+}
+
+.loading-container {
+  height: 100vh;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

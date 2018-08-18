@@ -1,0 +1,79 @@
+<div class="card-container">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'line'">
+    <nz-tab [nzTitle]="'General'">
+      <form style="margin-top: 50px" nz-form [formGroup]="generalForm" (ngSubmit)="submitGeneralForm()">
+          <nz-form-item>
+              <nz-form-label [nzSpan]="10" nzRequired nzFor="physics">Graph Physics</nz-form-label>
+              <nz-form-control [nzSpan]="8">
+                <nz-switch nzSize="small" id="physics" formControlName="physics"></nz-switch>
+              </nz-form-control>
+            </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="10" nzRequired nzFor="stepByStepAlgorithm">Step by step algorithm</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-switch nzSize="small" id="stepByStepAlgorithm" formControlName="stepByStepAlgorithm"></nz-switch>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="10" nzRequired nzFor="timePerStep">Time per step</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-slider [nzMax]="5000" [nzMin]=200 id="timePerStep" formControlName="timePerStep" [nzDisabled]="!generalForm.value.stepByStepAlgorithm"></nz-slider>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="10" nzRequired nzFor="numOfTurnPerStep">Number of turn per step</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-slider [nzMin]="1" [nzMax]="2000" id="numOfTurnPerStep" formControlName="numOfTurnPerStep" [nzDisabled]="!generalForm.value.stepByStepAlgorithm"></nz-slider>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control [nzSpan]="8" [nzOffset]="10">
+            <button nz-button nzType="primary">Submit</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+    <nz-tab [nzTitle]="'Harmony Search'">
+      <div nz-row>
+        <div nz-col nzSpan="8" nzOffset="5">
+          <h2>Harmony Search Params:</h2>
+        </div>
+      </div>
+      <form style="margin-top: 50px" nz-form [formGroup]="hmForm" (ngSubmit)="submitHMForm()">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="11" nzRequired nzFor="hms">HMS</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-input-number id="hms" formControlName="hms"></nz-input-number>
+            <nz-form-explain *ngIf="hmForm.get('hms').dirty && hmForm.get('hms').errors">Please input HMS!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="11" nzRequired nzFor="maxIteration">Max Iteration</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-input-number id="maxIteration" formControlName="maxIteration"></nz-input-number>
+            <nz-form-explain *ngIf="hmForm.get('maxIteration').dirty && hmForm.get('maxIteration').errors">Please input your max iteration!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="11" nzRequired nzFor="hmcr">HMCR</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-input-number id="hmcr" formControlName="hmcr"></nz-input-number>
+            <nz-form-explain *ngIf="hmForm.get('hmcr').dirty && hmForm.get('hmcr').errors">Please input your HMCR!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="11" nzRequired nzFor="par">PAR</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <nz-input-number id="par" formControlName="par"></nz-input-number>
+            <nz-form-explain *ngIf="hmForm.get('par').dirty && hmForm.get('par').errors">Please input your PAR!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control [nzSpan]="8" [nzOffset]="11">
+            <button nz-button nzType="primary">Submit</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+  </nz-tabset>
+</div>

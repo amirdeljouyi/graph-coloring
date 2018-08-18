@@ -1,5 +1,26 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
-</div>
+<nz-collapse nzAccordion>
+  <nz-collapse-panel [nzHeader]="'visualization'" [nzActive]="true">
+    <nz-content>
+      <div class="vis-toolbar clearfix">
+      </div>
+      <div id="mynetwork" style="background: #fff; height:calc(100vh - 189px);"></div>
+      <div *ngIf="result$" class="result-info">
+          <span>Algorithm: {{result$.algorithm}}</span>
+          <span> / Chromatic number: {{result$.chromaticNumber}}</span>
+          <span *ngIf="result$.generation"> / Generation: {{result$.generation}}</span>
+          <span *ngIf="result$.fitness"> / Fitness: {{result$.fitness}}</span> 
+      </div>
+    </nz-content>
+  </nz-collapse-panel>
+  <nz-collapse-panel [nzHeader]="'result'" [nzActive]="false">
+    <nz-content>
+      <h1> Algorithms Result</h1>
+      <nz-card *ngFor="let result of results$" nzTitle="{{result.algorithm}}">
+        <p>Chromatic number: {{result.chromaticNumber}}</p>
+        <p>Graph Coloring: {{result.graphColoring}}</p>
+        <p *ngIf="result.generation">Generation: {{result.generation}}</p>
+        <p *ngIf="result.fitness">Fitness: {{result.fitness}}</p>
+      </nz-card>
+    </nz-content>
+  </nz-collapse-panel>
+</nz-collapse>
