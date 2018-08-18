@@ -225,3 +225,8 @@ body {
   flex-direction: column;
   justify-content: center;
 }
+
+.ant-collapse-content{
+  height: calc(100vh - 157px);
+  overflow-y: auto;
+}

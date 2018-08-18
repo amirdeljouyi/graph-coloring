@@ -66,6 +66,8 @@ try {
     }
   });
 
+  require('update-electron-app')();
+
 } catch (e) {
   // Catch Error
   // throw e;

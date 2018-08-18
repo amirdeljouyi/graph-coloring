@@ -21,7 +21,7 @@ export default class Genetic {
     protected _numberChromosome: number;
     private result = new Subject<Result>();
     private bestChromosome: number[];
-    private bestFitness: number;
+    bestFitness = 0;
 
     population: number[][];
     constructor() {
@@ -108,7 +108,7 @@ export default class Genetic {
     }
 
     public setArrays() {
-        this.bestChromosome = new Array<number>(this.numberChromosome);
+        this.bestChromosome = new Array<number>(this.lengthChromosome);
         this.population = new Array<Array<number>>(this.numberChromosome);
         for (let i = 0; i < this.population.length; i++) {
             this.population[i] = new Array<number>(this.lengthChromosome);
@@ -132,13 +132,6 @@ export default class Genetic {
             fitnesses[i] = fitness.getfitness(3, this.population[i]);
         }
         return fitnesses;
-    }
-
-    public stopCondition(): boolean {
-        if (this.generation > this._maxIter) {
-            this.terminationCriteria = false;
-        }
-        return this.terminationCriteria;
     }
 
     public initiator(): void {
@@ -188,12 +181,14 @@ export default class Genetic {
     }
 
     protected chromomeReproduce(parent_1: number[], parent_2: number[]) {
+        const start = this.lengthChromosome / 3;
+        const randomA = randomGenerator(start, this.lengthChromosome - start);
+        let newChromosome = new Array<number>(this.lengthChromosome);
+        for (let i = 0; i < randomA; i++) {
+            newChromosome[i] = parent_1[i];
+        }
 
-        const start = this.numberChromosome / 3;
-        const randomA = randomGenerator(start, this.numberChromosome);
-        let newChromosome = parent_1;
-
-        for (let i = randomA; i < this.numberChromosome; i++) {
+        for (let i = randomA; i < this.lengthChromosome; i++) {
             newChromosome[i] = parent_2[i];
         }
 
@@ -223,13 +218,17 @@ export default class Genetic {
         const maxIterations = chromosome.length / 2;
 
         const randomA = randomGenerator(1, maxIterations);
+        let newChromosome = new Array<number>(this.lengthChromosome);
+        for (let i = 0; i < this.lengthChromosome; i++) {
+            newChromosome[i] = chromosome[i];
+        }
         let randomB;
 
         for (let i = 0; i < randomA; i++) {
             randomB = randomGenerator(0, chromosome.length - 1);
-            chromosome[randomB] = randomGenerator(this.low, this.high);
+            newChromosome[randomB] = randomGenerator(this.low, this.high);
         }
-        return chromosome;
+        return newChromosome;
     }
 
     protected mutate(population: number[][], num: number) {
@@ -237,8 +236,7 @@ export default class Genetic {
         for (let i = 0; i < num; i++) {
             const randomIdx = randomGenerator(0, population.length - 1);
 
-            let newChromosome = population[randomIdx];
-            newChromosome = this.chromosomeMutate(newChromosome);
+            const newChromosome = this.chromosomeMutate(population[randomIdx]);
             newPopulation.push(newChromosome);
         }
         return newPopulation;
@@ -251,43 +249,83 @@ export default class Genetic {
         const nRepro = this.numberChromosome * (this.pReproduce / pTotal);
         const nMutation = this.numberChromosome * (this.pMutation / pTotal);
         let newPopulation: number[][] = this.findBestChromosomes(fitness, pBest);
-        let reproducePopulation: number[][] = this.reproduce(newPopulation, nRepro);
-        let mutatePopulation: number[][] = this.mutate(newPopulation, nMutation);
-        // console.log(mutatePopulation);
+        const reproducePopulation: number[][] = this.reproduce(newPopulation, nRepro);
+        const mutatePopulation: number[][] = this.mutate(newPopulation, nMutation);
         newPopulation = newPopulation.concat(reproducePopulation);
         newPopulation = newPopulation.concat(mutatePopulation);
         this.population = newPopulation;
     }
 
-    protected correctColor(percentage: number) {
-        // let avg = 0;
-        // let finish = false;
-        // let per = this.numberChromosome * (percentage / 100);
+    protected correctColor(fitness: Fitness, percentage: number) {
+        let avg = 0;
+        let finish = false;
 
-        // for (let i = 0; i < this.numberChromosome && !finish; i++) {
-        //     if (this.population[i].getNumOfColours() === this.low) {
-        //         avg++;
-        //         if (avg === per) {
-        //             finish = true;
-        //         }
-        //     }
-        // }
+        let per = this.numberChromosome * (percentage / 100);
 
-        // return finish;
+        for (let i = 0; i < this.numberChromosome && !finish; i++) {
+            if (!fitness.conflict(this.population[i])) {
+                avg++;
+                if (avg === per) {
+                    finish = true;
+                }
+            }
+        }
+
+        if (finish === true) {
+            this.findBestChromosome(fitness);
+        }
+
+        return finish;
     }
 
     public mainLoop(fitness: Fitness) {
         this.initiator();
-        // let correctColor = false;
-        for (this.generation = 0; this.generation < this.maxIter; this.generation++) {
-            this.createNewPopulation(fitness);
+        if (this.stepByStepAlgorithm) {
+            this.iteration(fitness);
+        } else {
+            this.nonRecursiveIteration(fitness);
             this.findBestChromosome(fitness);
-            // if (this.correctColor(100.0 - this.pMutation)) {
-            //     correctColor = true;
-            // }
+            this.sendResult();
         }
+    }
 
-        this.sendResult();
+    iteration(fitness: Fitness) {
+        this.createNewPopulation(fitness);
+        this.generation++;
+        if (!this.stopCondition(fitness)) {
+            this.findBestChromosome(fitness);
+            this.sendResult();
+            return;
+        }
+        if (this.generation % this.numOfTurnPerStep === 0) {
+            setTimeout(() => {
+                this.findBestChromosome(fitness);
+                this.sendResult();
+                this.iteration(fitness);
+            }, this.timePerStep);
+        } else {
+            this.iteration(fitness);
+        }
+    }
+
+    public stopCondition(fitness: Fitness): boolean {
+        if (this.correctColor(fitness, 100.0 - this.pMutation)) {
+            this.terminationCriteria = false;
+        }
+        if (this.generation > this._maxIter) {
+            this.terminationCriteria = false;
+        }
+        return this.terminationCriteria;
+    }
+
+    nonRecursiveIteration(fitness: Fitness) {
+        let correctColor = false;
+        for (this.generation = 0; this.generation < this.maxIter && !correctColor; this.generation++) {
+            this.createNewPopulation(fitness);
+            if (this.correctColor(fitness, 100.0 - this.pMutation)) {
+                correctColor = true;
+            }
+        }
     }
 
     public getStrategyName(): string {

@@ -17,7 +17,9 @@
       <h1> Algorithms Result</h1>
       <nz-card *ngFor="let result of results$" nzTitle="{{result.algorithm}}">
         <p>Chromatic number: {{result.chromaticNumber}}</p>
-        <p>Graph Coloring: {{result.graphColoring}}</p>
+        <p>Graph Coloring: {{result.graphColors}}
+          <!-- <span *ngFor="let color of result.graphColors">{{color}} ,</span> -->
+        </p>
         <p *ngIf="result.generation">Generation: {{result.generation}}</p>
         <p *ngIf="result.fitness">Fitness: {{result.fitness}}</p>
       </nz-card>

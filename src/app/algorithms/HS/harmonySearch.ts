@@ -169,8 +169,14 @@ export default class HarmonySearch {
         return fitness.getChromaticNumber(newHarmony);
     }
 
-    public stopCondition(): boolean {
-        if (this.generation > this._maxIter) {
+    public stopCondition(fitness: Fitness): boolean {
+        let fitnessCondition = true;
+        for (let i = 0; i < this._HMS; i++) {
+            if (fitness.conflict(this.HM[i])) {
+                fitnessCondition = false;
+            }
+        }
+        if (this.generation > this._maxIter || fitnessCondition) {
             this.terminationCriteria = false;
         }
         return this.terminationCriteria;
@@ -313,11 +319,10 @@ export default class HarmonySearch {
         this.sendResult();
         this.printBest();
         this.printNCHVHistory();
-        return this.bestHarmony;
     }
 
     iteration(fitness: Fitness) {
-        if (!this.stopCondition()) {
+        if (!this.stopCondition(fitness)) {
             return;
         }
         this.makeNCHVS();
@@ -337,7 +342,7 @@ export default class HarmonySearch {
     }
 
     nonRecursiveIteration(fitness: Fitness) {
-        while (this.stopCondition()) {
+        while (this.stopCondition(fitness)) {
             this.makeNCHVS();
             const currentFit = this.calculateFitness(fitness, this.NCHV); // CEC
             const currentCN = this.calculateChromaticNumber(fitness, this.NCHV);

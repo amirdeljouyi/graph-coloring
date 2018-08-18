@@ -36,4 +36,7 @@ export class AppComponent implements AfterViewInit {
       this.electronService.ipcRenderer.send('show-context-menu');
     });
   }
+  github() {
+    this.electronService.remote.shell.openExternal('https://github.com/amirdeljouyi/graph-coloring');
+  }
 }

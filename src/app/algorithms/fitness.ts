@@ -47,5 +47,15 @@ export default class Fitness {
         return fit;
     }
 
+    public conflict = (colorIndex: { [key: number]: number }): boolean => {
+        const edges = this.graph.getAllEdges(true);
+        for (const edge of edges) {
+            if (colorIndex[(edge as EdgeImmut).getFrom()] === colorIndex[(edge as EdgeImmut).getTo()]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

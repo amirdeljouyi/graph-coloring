@@ -27,7 +27,7 @@ export class GraphService {
   private _physics = true;
   private _stepByStepAlgorithm = true;
   private _timePerStep = 500;
-  private _numOfTurnPerStep = 200;
+  private _numOfTurnPerStep = 15;
 
   private _hms = 10;
   private _nvar: number;

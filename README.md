@@ -29,6 +29,7 @@ A genetic algorithm is a search heuristic that is inspired by Charles Darwin’s
 ## Supported Algorithms:
 - `Welsh Powell`
 - `Hamrony Search`
+- `Genetic Algorithm`
 ## Builtin Graphs
 - Petersen Graph
 - Konigsberg Bridges Graph
@@ -78,7 +79,6 @@ You can find commands for build in browser or windows , linux , mac in `package.
 # ☑ TODO
 
 ## Algorithms
-- fix problem with Genetic Algorithm
 - Tabu Search
 - Simulated Annealing
 
@@ -100,10 +100,6 @@ Help me in this application with your feedback and your discussion
 - Reach out with any feedback [My Twitter](https://twitter.com/amirdeljouyi)
 
 **Please title your issue with [Bug] or [Feature Request] depending on if your issue is a bug or a feature request.**
-
-## License
-
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC0%201.0-brightgreen.svg?style=flat-square)](https://creativecommons.org/licenses/by/4.0/)
 
 [license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=flat
 [license]: ./LICENSE.md

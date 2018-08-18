@@ -35,7 +35,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.graphSubscription = this.graphService.getResult().subscribe((result: Result) => {
       this.results$.push(result);
       this.result$ = result;
-      console.log(`result is ${result.fitness}`);
     });
     this.visNetworkService.doubleClick.subscribe((event) => {
       event = event[1];
