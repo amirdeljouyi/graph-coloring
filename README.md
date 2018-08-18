@@ -6,9 +6,9 @@
 
 # Getting Started
 A `cross-platform` application to `build graphs` and run `graph coloring` algorithms on them , you can download this app from :
-- Windows : 
-- Linux :
-- Mac :
+- Windows : [Graph Coloring windows x64][windows]
+- Linux : Soon
+- Mac : Soon
 
 # 🚀 Introduction
 
@@ -105,3 +105,4 @@ Help me in this application with your feedback and your discussion
 
 [license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=flat
 [license]: ./LICENSE.md
+[windows]: https://github.com/amirdeljouyi/graph-coloring/releases/download/v1.0.1/graph-coloring-windows.exe
