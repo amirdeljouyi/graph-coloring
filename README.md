@@ -1,3 +1,5 @@
+# Graph Coloring
+![Screen Shot](./screenshot.png)
 [![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
 
 ![](./split.png)
