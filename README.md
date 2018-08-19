@@ -4,13 +4,13 @@
 
 ![](./split.png)
 
-# Getting Started
+# 🚀 Getting Started
 A `cross-platform` application to `build graphs` and run `graph coloring` algorithms on them , you can download this app from :
 - Windows : [Graph Coloring windows x64][windows]
 - Linux : Soon
 - Mac : Soon
 
-# 🚀 Introduction
+# 🍄 Introduction
 
 ## Graph coloring
 Graph coloring is one of the most important concepts in graph theory and is used in many real time applications in computer science. It can be deﬁned as a problem of how to assign colors to certain elements of a graph given some constraints. It is especially used in research areas of science such as data mining, image segmentation, clustering, image capturing, networking etc. Vertex coloring is the most common application of graph coloring. In vertex coloring, given m colors, the aim is to ﬁnd the coloring of vertices of the graph such that no two adjacent vertices have the same color (Here, adjacent means that two vertices are directly connected by an edge). If this goal is achieved, the graph is said to have proper coloring.
@@ -26,7 +26,7 @@ The standard HS mimics music improvisation process to solve optimization problem
 ### Genetic Algorithm
 A genetic algorithm is a search heuristic that is inspired by Charles Darwin’s theory of natural evolution. This algorithm reflects the process of natural selection where the fittest individuals are selected for reproduction in order to produce offspring of the next generation.
 
-# Features
+# ✨ Features
 
 ## Supported Algorithms:
 - `Welsh Powell`
@@ -48,7 +48,7 @@ A genetic algorithm is a search heuristic that is inspired by Charles Darwin’s
 ## Export Graph
 - you can export your graph as .json and .dimacs 
 
-# Implementation
+# 👦 Implementation
 I used angular and electron for developing my application for cross-platform application 
 
 Currently runs with:
@@ -59,7 +59,7 @@ Currently runs with:
 - `Vis.js`
 - `Typescript` v2.7.2
 
-# Develop
+# 👽 Develop
 If you want to build this app locally or develop this repo
 
 ``` bash
