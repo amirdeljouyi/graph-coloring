@@ -279,12 +279,15 @@ export default class Genetic {
     }
 
     public mainLoop(fitness: Fitness) {
+        const t0 = performance.now();
         this.initiator();
         if (this.stepByStepAlgorithm) {
             this.iteration(fitness);
         } else {
             this.nonRecursiveIteration(fitness);
             this.findBestChromosome(fitness);
+            const t1 = performance.now();
+            console.log('Call to Genetic took ' + (t1 - t0) + ' milliseconds.');
             this.sendResult();
         }
     }

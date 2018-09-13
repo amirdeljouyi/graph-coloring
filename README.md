@@ -86,7 +86,7 @@ You can find commands for build in browser or windows , linux , mac in `package.
 
 ## Algorithm Improvement
 - Implement Other Fitness Function
-- Implement Othe Harmony Search
+- Implement Other Harmony Search
 
 ## Application
 - Add graph state for redo/undo

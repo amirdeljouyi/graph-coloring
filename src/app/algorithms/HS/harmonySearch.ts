@@ -34,6 +34,7 @@ export default class HarmonySearch {
     private _stepByStepAlgorithm: boolean;
     private _timePerStep: number;
     private _numOfTurnPerStep: number;
+    private parIndexes: number[];
 
     public set stepByStepAlgorithm(value: boolean) {
         this._stepByStepAlgorithm = value;
@@ -157,7 +158,7 @@ export default class HarmonySearch {
             curFit = this.calculateFitness(fitness, this.HM[i]);
             this.HM[i][this._NVAR] = curFit; // the calculateFitness is stored in the last column of HM
             this.chromaticNumber[i] = this.calculateChromaticNumber(fitness, this.HM[i]);
-            console.log(`fitness childes is : ${curFit}`);
+            // console.log(`fitness childes is : ${curFit}`);
         }
     }
 
@@ -182,6 +183,28 @@ export default class HarmonySearch {
         return this.terminationCriteria;
     }
 
+    public stopCondition2(fitness: Fitness, percent: number): boolean {
+        let avg = 0;
+
+        const per = this._HMS * (percent / 100);
+
+        for (let i = 0; i < this._HMS && this.terminationCriteria; i++) {
+            if (!fitness.conflict(this.HM[i])) {
+                avg++;
+                if (avg === per) {
+                    this.terminationCriteria = false;
+                    break;
+                }
+            }
+        }
+
+        if (this.generation > this._maxIter) {
+            this.terminationCriteria = false;
+        }
+
+        return this.terminationCriteria;
+    }
+
     public updateHarmonyMemory(newFitness, newChromaticNumber): void {
 
         let worst = this.HM[0][this._NVAR];
@@ -200,15 +223,27 @@ export default class HarmonySearch {
             this.chromaticNumber[worstIndex] = newChromaticNumber;
         }
 
-        // find best harmony
-        let best = this.HM[0][this._NVAR];
-        let bestIndex = 0;
+        this.findBestHarmony();
+    }
+    private findBestHarmonyInGeneration(): number[] {
+        const best = new Array<number>(2);
+        best[0] = this.HM[0][this._NVAR];
+        best[1] = 0;
         for (let i = 0; i < this._HMS; i++) {
-            if (this.HM[i][this._NVAR] > best) {
-                best = this.HM[i][this._NVAR];
-                bestIndex = i;
+            if (this.HM[i][this._NVAR] > best[0]) {
+                best[0] = this.HM[i][this._NVAR];
+                best[1] = i;
             }
         }
+        return best;
+    }
+
+
+    private findBestHarmony() {
+        // find best harmony
+        const bestArr = this.findBestHarmonyInGeneration();
+        const best = bestArr[0];
+        const bestIndex = bestArr[1];
         this.bestFitHistory[this.generation] = best;
 
         if (this.generation > 0 && best > this.bestFitHistory[this.generation - 1]) {
@@ -216,6 +251,7 @@ export default class HarmonySearch {
                 this.bestHarmony[k] = this.HM[bestIndex][k];
             }
             this.bestHarmony[this._NVAR] = best;
+            // this.NCHV = [...this.bestHarmony];
             this.bestChromaticNumber = this.chromaticNumber[bestIndex];
         }
     }
@@ -225,25 +261,23 @@ export default class HarmonySearch {
             this.HM[randomGenerator(0, this._HMS - 1)][nchvIndex];
     }
 
-    protected pitchAdjustment(nchvIndex): void {
-        this._BW = this.calculateBW();
-        const rand = Math.random();
-        let temp = this.NCHV[nchvIndex];
-        if (rand < 0.5) {
-            temp += rand * this._BW;
-            if (temp < this.high) {
-                this.NCHV[nchvIndex] = temp;
-            }
-        } else {
-            temp -= rand * this._BW;
-            if (temp > this.low) {
-                this.NCHV[nchvIndex] = temp;
-            }
+    protected pitchAdjustments(fitness: Fitness) {
+        for (const index of this.parIndexes) {
+            this.pitchAdjustment(fitness, index);
+        }
+    }
+    protected pitchAdjustment(fitness: Fitness, nchvIndex): void {
+        const swap = fitness.swapStep(this.NCHV, nchvIndex);
+        if (swap[1] < 0) {
+            const index = swap[0];
+            const temp = this.NCHV[nchvIndex];
+            this.NCHV[nchvIndex] = this.NCHV[index];
+            this.NCHV[index] = temp;
         }
     }
 
     protected calculateBW() {
-        return this._BW;
+        return this.high - this.low;
     }
 
     protected randomSelection(varIndex): void {
@@ -310,22 +344,27 @@ export default class HarmonySearch {
     public mainLoop(fitness: Fitness) {
         // HM ro por mikonim
         this.initiator(fitness);
-        this.printHM();
+        const t0 = performance.now();
+        // this.printHM();
+        // this.NCHV = [...this.HM[this.findBestHarmonyInGeneration()[1]].slice(0, this._NVAR)];
+        // console.log(this.NCHV);
         if (this._stepByStepAlgorithm) {
             this.iteration(fitness);
         } else {
             this.nonRecursiveIteration(fitness);
         }
+        const t1 = performance.now();
+        console.log('Call to Harmony Search took ' + (t1 - t0) + ' milliseconds.');
         this.sendResult();
-        this.printBest();
-        this.printNCHVHistory();
+        // this.printBest();
+        // this.printNCHVHistory();
     }
 
     iteration(fitness: Fitness) {
         if (!this.stopCondition(fitness)) {
             return;
         }
-        this.makeNCHVS();
+        this.makeNCHVS(fitness);
         const currentFit = this.calculateFitness(fitness, this.NCHV); // CEC
         const currentCN = this.calculateChromaticNumber(fitness, this.NCHV);
         this.updateHarmonyMemory(currentFit, currentCN);
@@ -342,12 +381,12 @@ export default class HarmonySearch {
     }
 
     nonRecursiveIteration(fitness: Fitness) {
-        while (this.stopCondition(fitness)) {
-            this.makeNCHVS();
+        while (this.stopCondition2(fitness, 80)) {
+            this.makeNCHVS(fitness);
             const currentFit = this.calculateFitness(fitness, this.NCHV); // CEC
             const currentCN = this.calculateChromaticNumber(fitness, this.NCHV);
             this.updateHarmonyMemory(currentFit, currentCN);
-            this.printHM();
+            // this.printHM();
             this.generation++;
         }
     }
@@ -383,10 +422,13 @@ export default class HarmonySearch {
         }
     }
 
-    protected makeNCHVS(): void {
+    protected makeNCHVS(fitness: Fitness): void {
+        this.parIndexes = [];
         for (let nvarIndex = 0; nvarIndex < this._NVAR; nvarIndex++) {
-            this.makeNCHV(nvarIndex);
+            this.makeNCHV(fitness, nvarIndex);
         }
+        // console.log('this.par', this.parIndexes);
+        this.pitchAdjustments(fitness);
     }
 
     protected printHM(): void {
@@ -398,13 +440,14 @@ export default class HarmonySearch {
         }
     }
 
-    protected makeNCHV(nchvIndex: number): void {
+    protected makeNCHV(fitness: Fitness, nchvIndex: number): void {
 
         this._PAR = this.calculatePAR();
         if (Math.random() <= this._HMCR) {
             this.memoryConsideration(nchvIndex);
             if (Math.random() < this._PAR) {
-                // this.pitchAdjustment(nchvIndex);
+                // this.pitchAdjustment(fitness, nchvIndex);
+                this.parIndexes.push(nchvIndex);
             }
         } else {
             this.randomSelection(nchvIndex);

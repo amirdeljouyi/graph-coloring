@@ -31,7 +31,7 @@ export class GraphService {
 
   private _hms = 10;
   private _nvar: number;
-  private _maxIteration = 10000;
+  private _maxIteration = 100000;
   private _numberOfRun = 1;
   private _bw = .01;
   private _bw_min = .0001;
